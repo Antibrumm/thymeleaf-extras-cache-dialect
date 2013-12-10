@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
+	<artifactId>thymeleaf-cache-dialect</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>Thymeleaf Cache Dialect</name>
+	<description>A dialect for Thymeleaf that allows you to do partial page caching.
+
+Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning. 
+
+Working with Thymeleaf 2.1.0+ (2.1.0.RELEASE and its dependencies included)</description>
+	<url>https://github.com/Antibrumm/thymeleaf-extras-cache</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<scm>
+		<connection>scm:git:git@github.com:Antibrumm/thymeleaf-extras-with-dialect.git</connection>
+		<url>https://github.com/Antibrumm/thymeleaf-extras-with-dialect.git</url>
+		<developerConnection>scm:git:git@github.com:Antibrumm/thymeleaf-extras-with-dialect.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Martin Frey</name>
+			<roles>
+				<role>Project Admin</role>
+				<role>Lead Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+
+	<issueManagement>
+		<url>https://github.com/Antibrumm/thymeleaf-extras-with-dialect</url>
+	</issueManagement>
+
+	<properties>
+		<java-version>1.5</java-version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>2.1.0.RELEASE</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<fork>true</fork>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-release-plugin</artifactId> -->
+			<!-- <version>2.1</version> -->
+			<!-- </plugin> -->
+
+		</plugins>
+	</build>
+</project>

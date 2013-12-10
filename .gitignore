@@ -1,0 +1,8 @@
+target/
+.settings/
+.externalToolBuilders/
+.idea/
+*.iml
+.project
+.classpath
+/.svn
