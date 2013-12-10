@@ -76,7 +76,7 @@ Use it
 	xmlns:with="http://www.thymeleaf.org/extras/with">
 <head></head>
 <body>
-	<ul cache:name="menu">
+	<ul cache:name="menu+${someVar}">
 		<li th:text="${a.title}"></li>
 		<li th:each="b : ${a.bs}" th:object="${b}">
 			<span th:text="*{text}"></span>
