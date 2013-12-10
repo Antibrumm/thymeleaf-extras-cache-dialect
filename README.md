@@ -9,7 +9,6 @@ Some parts of our webpage will never change during the lifetime of the applicati
 !This implementation is far from optimized yet!
 
  - Current version: 0.0.1-SNAPSHOT
- - Released: 07 November 2013
 
 
 Requirements
@@ -29,11 +28,13 @@ Add a dependency to your project with the following co-ordinates:
  - ArtifactId: `thymeleaf-cache-dialect`
  - Version: `0.0.1-SNAPSHOT`
 
-	<dependency>
-		<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
-		<artifactId>thymeleaf-cache-dialect</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
+```xml
+<dependency>
+	<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
+	<artifactId>thymeleaf-cache-dialect</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 
 Usage
 -----
