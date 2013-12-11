@@ -4,9 +4,7 @@ Thymeleaf Cache Dialect
 
 A dialect for Thymeleaf that allows you to do partial page caching.
 
-Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning. 
-
-!This implementation is far from optimized yet!
+Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning. Think of a menu which depends on the user role for example.
 
  - Current version: 0.0.1-SNAPSHOT
 
@@ -26,13 +24,13 @@ Add a dependency to your project with the following co-ordinates:
 
  - GroupId: `ch.mfrey.thymeleaf.extras.cache`
  - ArtifactId: `thymeleaf-cache-dialect`
- - Version: `0.0.1-SNAPSHOT`
+ - Version: `1.0.0-SNAPSHOT`
 
 ```xml
 <dependency>
 	<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
 	<artifactId>thymeleaf-cache-dialect</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -77,7 +75,7 @@ Use it
 	xmlns:with="http://www.thymeleaf.org/extras/with">
 <head></head>
 <body>
-	<ul cache:name="menu+${someVar}">
+	<ul cache:name="menu+${user_role}">
 		<li th:text="${a.title}"></li>
 		<li th:each="b : ${a.bs}" th:object="${b}">
 			<span th:text="*{text}"></span>
@@ -91,10 +89,3 @@ Use it
 </body>
 </html>
 ```
-
-
-Changelog
----------
-
-### 0.0.1-SNAPSHOT
- - Initial commit.

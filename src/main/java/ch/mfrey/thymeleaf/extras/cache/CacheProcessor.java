@@ -1,19 +1,19 @@
 package ch.mfrey.thymeleaf.extras.cache;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.Arguments;
-import org.thymeleaf.Configuration;
 import org.thymeleaf.dom.Element;
 import org.thymeleaf.dom.Macro;
+import org.thymeleaf.dom.Node;
 import org.thymeleaf.processor.ProcessorResult;
 import org.thymeleaf.processor.attr.AbstractAttrProcessor;
-import org.thymeleaf.standard.expression.IStandardExpression;
-import org.thymeleaf.standard.expression.IStandardExpressionParser;
-import org.thymeleaf.standard.expression.StandardExpressions;
 
 public class CacheProcessor extends AbstractAttrProcessor {
 	public static final Logger log = LoggerFactory.getLogger(CacheProcessor.class);
+	public static final int PRECEDENCE = 10;
 
 	public CacheProcessor() {
 		super("name");
@@ -24,30 +24,22 @@ public class CacheProcessor extends AbstractAttrProcessor {
 		log.debug("Checking Cache");
 		final String attributeValue = element.getAttributeValue(attributeName);
 
-		final Configuration configuration = arguments.getConfiguration();
-		final IStandardExpressionParser expressionParser = StandardExpressions.getExpressionParser(configuration);
-
-		final IStandardExpression expression = expressionParser.parseExpression(configuration, arguments, attributeValue);
-
-		final Object result = expression.execute(configuration, arguments);
-		if (result == null || result == "") {
+		final String result = ExpressionSupport.getEvaluatedAttributeValueAsString(arguments, attributeValue);
+		if (result == "") {
 			log.debug("Cache name not resolvable: {}", attributeValue);
 			return ProcessorResult.OK;
 		}
 
-		String templateMode = arguments.getTemplateResolution().getTemplateMode();
+		String cacheName = result.toString();
 
-		String cacheName = CacheDialect.CACHE_PREFIX + templateMode + "_" + result.toString();
-
-		Object object = arguments.getTemplateEngine().getCacheManager().getExpressionCache().get(cacheName);
+		List<Node> contents = CacheManager.get(arguments, cacheName);
 		element.removeAttribute(attributeName);
-		if (object != null) {
+		if (contents != null && contents.size() == 1 && contents.get(0) instanceof Macro) {
 			log.debug("Cache found. Replacing");
 			// The object is the cached string representation
-			Macro content = new Macro((String) object);
 			element.clearChildren();
-			element.addChild(content);
-			element.getParent().extractChild(element);
+			element.getParent().insertAfter(element, contents.get(0));
+			element.getParent().removeChild(element);
 		} else {
 			log.debug("Cache not found. Adding add element");
 			Element cacheDiv = new Element("div");
@@ -59,7 +51,7 @@ public class CacheProcessor extends AbstractAttrProcessor {
 
 	@Override
 	public int getPrecedence() {
-		return 10;
+		return PRECEDENCE;
 	}
 
 }

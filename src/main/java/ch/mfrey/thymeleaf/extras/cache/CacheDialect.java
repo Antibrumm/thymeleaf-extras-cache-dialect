@@ -10,7 +10,8 @@ public class CacheDialect extends AbstractDialect {
 	public static final String DIALECT_NAMESPACE = "http://www.thymeleaf.org/extras/cache";
 
 	public static final String DIALECT_PREFIX = "cache";
-	public static final String CACHE_PREFIX = "CACHE_";
+
+	public static final String CACHE_PREFIX = "CacheDialect_";
 
 	/**
 	 * {@inheritDoc}
