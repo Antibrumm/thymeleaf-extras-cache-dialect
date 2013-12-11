@@ -4,7 +4,7 @@ Thymeleaf Cache Dialect
 
 A dialect for Thymeleaf that allows you to do partial page caching.
 
-Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning. Think of a menu which depends on the user role for example.
+Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning.
 
  - Current version: 1.0.0-SNAPSHOT
 
@@ -36,6 +36,16 @@ Add a dependency to your project with the following co-ordinates:
 
 Usage
 -----
+
+The Cache dialect supports three attributes:
+
+ - cache:name="name" -> Cache by name
+ - cache:ttl="60" -> Make cache live 60 sec
+ - cache:evict="name" -> Evict cache by name
+ 
+All attribute values can be an expression.
+
+
 
 Add the Cache dialect to your existing Thymeleaf template engine, eg:
 
@@ -75,6 +85,7 @@ Use it
 	xmlns:with="http://www.thymeleaf.org/extras/with">
 <head></head>
 <body>
+	<!-- Simplest use by name. Cached indefinitely -->
 	<ul cache:name="menu+${user_role}">
 		<li th:text="${a.title}"></li>
 		<li th:each="b : ${a.bs}" th:object="${b}">
@@ -86,6 +97,16 @@ Use it
 			</ul>
 		</li>
 	</ul>
+	
+	<!-- Cached for 60 sec -->
+	<div cache:name="longCalcValue" cache:ttl="60">
+		<span th:text="${a.title}"></span>
+	</div>
+	
+	<!-- Evict a cache by name if not resolved to '' -->
+	<div cache:evict="${mayResolveIntoACachedName}" cache:name="longCalcValue">
+		<span th:text="${a.title}"></span>
+	</div>
 </body>
 </html>
 ```

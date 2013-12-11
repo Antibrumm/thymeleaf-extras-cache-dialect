@@ -29,6 +29,8 @@ public class CacheAddProcessor extends AbstractAttrProcessor {
 	@Override
 	protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
 		String cacheName = element.getAttributeValue(attributeName);
+		element.removeAttribute(attributeName);
+		
 		log.debug("Caching element {}", cacheName);
 
 		String templateMode = arguments.getTemplateResolution().getTemplateMode();

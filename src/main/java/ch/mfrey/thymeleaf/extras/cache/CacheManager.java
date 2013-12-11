@@ -8,8 +8,6 @@ import org.thymeleaf.cache.ICache;
 import org.thymeleaf.dom.Node;
 
 public class CacheManager {
-
-
 	private static String getCacheName(final String templateMode, final String name) {
 		return CacheDialect.CACHE_PREFIX + templateMode + "_" + name;
 	}
@@ -21,13 +19,36 @@ public class CacheManager {
 		return templateEngine.getCacheManager().getFragmentCache();
 	}
 
-	public static List<Node> get(final Arguments arguments, final String cacheName) {
-		return getCache(arguments.getTemplateEngine()).get(
-				getCacheName(arguments.getTemplateResolution().getTemplateMode(), cacheName));
+	public static List<Node> get(final Arguments arguments, final String cacheName, final int cacheTTLs) {
+		return get(getCache(arguments.getTemplateEngine()), arguments.getTemplateResolution().getTemplateMode(), cacheName,
+				cacheTTLs);
 	}
 
-	public static void put(final Arguments arguments, final String cacheName, List<Node> content) {
-		getCache(arguments.getTemplateEngine()).put(
-				getCacheName(arguments.getTemplateResolution().getTemplateMode(), cacheName), content);
+	public static List<Node> get(final ICache<String, List<Node>> cache, final String templateMode,
+			final String cacheName, final int cacheTTLs) {
+		if (cacheTTLs == 0) {
+			return cache.get(getCacheName(templateMode, cacheName));
+		} else {
+			return cache.get(getCacheName(templateMode, cacheName), new TTLCacheValidityChecker(cacheTTLs));
+		}
 	}
+
+	public static void put(final Arguments arguments, final String cacheName, final List<Node> content) {
+		put(getCache(arguments.getTemplateEngine()), arguments.getTemplateResolution().getTemplateMode(), cacheName,
+				content);
+	}
+
+	public static void put(final ICache<String, List<Node>> cache, final String templateMode, final String cacheName,
+			final List<Node> content) {
+		cache.put(getCacheName(templateMode, cacheName), content);
+	}
+
+	public static void evict(final ICache<String, List<Node>> cache, final String templateMode, final String cacheName) {
+		cache.clearKey(getCacheName(templateMode, cacheName));
+	}
+
+	public static void evict(final Arguments arguments, final String cacheName) {
+		evict(getCache(arguments.getTemplateEngine()), arguments.getTemplateResolution().getTemplateMode(), cacheName);
+	}
+
 }

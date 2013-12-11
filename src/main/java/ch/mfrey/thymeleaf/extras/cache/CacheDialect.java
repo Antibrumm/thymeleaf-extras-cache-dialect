@@ -21,6 +21,8 @@ public class CacheDialect extends AbstractDialect {
 		HashSet<IProcessor> processors = new HashSet<IProcessor>();
 		processors.add(new CacheProcessor());
 		processors.add(new CacheAddProcessor());
+		
+		processors.add(new CacheEvictProcessor());
 		return processors;
 	}
 
