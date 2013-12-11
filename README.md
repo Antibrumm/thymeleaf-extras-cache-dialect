@@ -6,7 +6,7 @@ A dialect for Thymeleaf that allows you to do partial page caching.
 
 Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning. Think of a menu which depends on the user role for example.
 
- - Current version: 0.0.1-SNAPSHOT
+ - Current version: 1.0.0-SNAPSHOT
 
 
 Requirements

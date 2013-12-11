@@ -25,9 +25,9 @@ Working with Thymeleaf 2.1.0+ (2.1.0.RELEASE and its dependencies included)</des
 	</parent>
 
 	<scm>
-		<connection>scm:git:git@github.com:Antibrumm/thymeleaf-extras-with-dialect.git</connection>
-		<url>https://github.com/Antibrumm/thymeleaf-extras-with-dialect.git</url>
-		<developerConnection>scm:git:git@github.com:Antibrumm/thymeleaf-extras-with-dialect.git</developerConnection>
+		<connection>scm:git:git@github.com:Antibrumm/thymeleaf-extras-cache-dialect.git</connection>
+		<url>https://github.com/Antibrumm/thymeleaf-extras-cache-dialect.git</url>
+		<developerConnection>scm:git:git@github.com:Antibrumm/thymeleaf-extras-cache-dialect.git</developerConnection>
 	</scm>
 
 	<developers>
@@ -42,7 +42,7 @@ Working with Thymeleaf 2.1.0+ (2.1.0.RELEASE and its dependencies included)</des
 
 
 	<issueManagement>
-		<url>https://github.com/Antibrumm/thymeleaf-extras-with-dialect</url>
+		<url>https://github.com/Antibrumm/thymeleaf-extras-cache-dialect</url>
 	</issueManagement>
 
 	<properties>
