@@ -80,7 +80,7 @@ Use it
 ```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:with="http://www.thymeleaf.org/extras/with">
+	xmlns:cache="http://www.thymeleaf.org/extras/cache">
 <head></head>
 <body>
 	<!-- Simplest use by name. Cached indefinitely -->
