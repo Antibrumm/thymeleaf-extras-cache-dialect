@@ -6,8 +6,6 @@ A dialect for Thymeleaf that allows you to do partial page caching.
 
 Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning.
 
- - Current version: 1.0.0-SNAPSHOT
-
 
 Requirements
 ------------
@@ -24,13 +22,13 @@ Add a dependency to your project with the following co-ordinates:
 
  - GroupId: `ch.mfrey.thymeleaf.extras.cache`
  - ArtifactId: `thymeleaf-cache-dialect`
- - Version: `1.0.0-SNAPSHOT`
+ - Version: `1.0.0`
 
 ```xml
 <dependency>
 	<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
 	<artifactId>thymeleaf-cache-dialect</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 
