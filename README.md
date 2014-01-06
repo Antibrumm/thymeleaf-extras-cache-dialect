@@ -4,7 +4,8 @@ Thymeleaf Cache Dialect
 
 A dialect for Thymeleaf that allows you to do partial page caching.
 
-Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning.
+Some parts of our webpage will not change often during the lifetime of the application or is dependent only on a usersession.
+This dialect will cache the resulting output of the element it is declared on and will replace the element on a cache hit.
 
 
 Requirements
