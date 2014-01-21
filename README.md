@@ -23,13 +23,13 @@ Add a dependency to your project with the following co-ordinates:
 
  - GroupId: `ch.mfrey.thymeleaf.extras.cache`
  - ArtifactId: `thymeleaf-cache-dialect`
- - Version: `1.0.0`
+ - Version: `1.0.1`
 
 ```xml
 <dependency>
 	<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
 	<artifactId>thymeleaf-cache-dialect</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 </dependency>
 ```
 
