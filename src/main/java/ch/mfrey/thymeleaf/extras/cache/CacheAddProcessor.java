@@ -52,7 +52,7 @@ public class CacheAddProcessor extends AbstractAttrProcessor {
 			((AbstractGeneralTemplateWriter) templateWriter).writeNode(arguments, writer, parent);
 
 			Node content = new Macro(writer.toString());
-			CacheManager.put(arguments, cacheName, Collections.singletonList(content));
+			CacheManager.INSTANCE.put(arguments, cacheName, Collections.singletonList(content));
 		} catch (IOException e) {
 			throw new TemplateOutputException("Error during creation of output", e);
 		}

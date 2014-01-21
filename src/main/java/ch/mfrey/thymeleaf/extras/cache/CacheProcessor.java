@@ -65,10 +65,10 @@ public class CacheProcessor extends AbstractAttrProcessor {
 			log.warn("cache:ttl defined but not parseable");
 		}
 
-		List<Node> contents = CacheManager.get(arguments, cacheName, cacheTTLs);
+		List<Node> contents = CacheManager.INSTANCE.get(arguments, cacheName, cacheTTLs);
 
 		if (contents != null && contents.size() == 1 && contents.get(0) instanceof Macro) {
-			log.debug("Cache found. Replacing element.");
+			log.debug("Cache found {}. Replacing element.", cacheName);
 			// The object is the cached string representation
 			element.clearChildren();
 			element.getParent().insertAfter(element, contents.get(0));

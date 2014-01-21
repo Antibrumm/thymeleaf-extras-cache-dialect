@@ -26,7 +26,7 @@ public class CacheEvictProcessor extends AbstractAttrProcessor {
 			return ProcessorResult.OK;
 		}
 
-		CacheManager.evict(arguments, cacheName);
+		CacheManager.INSTANCE.evict(arguments, cacheName);
 
 		return ProcessorResult.OK;
 	}

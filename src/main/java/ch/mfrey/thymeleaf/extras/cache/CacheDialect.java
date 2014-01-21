@@ -11,8 +11,6 @@ public class CacheDialect extends AbstractDialect {
 
 	public static final String DIALECT_PREFIX = "cache";
 
-	public static final String CACHE_PREFIX = "CacheDialect_";
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -21,7 +19,7 @@ public class CacheDialect extends AbstractDialect {
 		HashSet<IProcessor> processors = new HashSet<IProcessor>();
 		processors.add(new CacheProcessor());
 		processors.add(new CacheAddProcessor());
-		
+
 		processors.add(new CacheEvictProcessor());
 		return processors;
 	}
