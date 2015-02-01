@@ -7,6 +7,8 @@ A dialect for Thymeleaf that allows you to do partial page caching.
 Some parts of our webpage will not change often during the lifetime of the application or is dependent only on a usersession.
 This dialect will cache the resulting output of the element it is declared on and will replace the element on a cache hit.
 
+[![Build Status](https://travis-ci.org/Antibrumm/thymeleaf-extras-with-dialect.png)](https://travis-ci.org/Antibrumm/thymeleaf-extras-with-dialect)
+
 
 Requirements
 ------------
@@ -23,7 +25,7 @@ Add a dependency to your project with the following co-ordinates:
 
  - GroupId: `ch.mfrey.thymeleaf.extras.cache`
  - ArtifactId: `thymeleaf-cache-dialect`
- - Version: `1.0.1`
+ - Version: `${thymeleaf-cache-dialect.version}`
 
 ```xml
 <dependency>
