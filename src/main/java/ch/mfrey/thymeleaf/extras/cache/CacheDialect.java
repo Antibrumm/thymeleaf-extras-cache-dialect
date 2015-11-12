@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
+import org.thymeleaf.standard.processor.StandardXmlNsTagProcessor;
 import org.thymeleaf.templatemode.TemplateMode;
 
 public class CacheDialect extends AbstractProcessorDialect {
@@ -22,6 +23,7 @@ public class CacheDialect extends AbstractProcessorDialect {
      */
     public Set<IProcessor> getProcessors(String dialectPrefix) {
         HashSet<IProcessor> processors = new HashSet<IProcessor>();
+        processors.add(new StandardXmlNsTagProcessor(this, TemplateMode.HTML, dialectPrefix));
         processors.add(new CacheProcessor(this, TemplateMode.HTML, dialectPrefix));
         processors.add(new CacheAddProcessor(this, TemplateMode.HTML, dialectPrefix));
         processors.add(new CacheEvictProcessor(this, TemplateMode.HTML, dialectPrefix));
