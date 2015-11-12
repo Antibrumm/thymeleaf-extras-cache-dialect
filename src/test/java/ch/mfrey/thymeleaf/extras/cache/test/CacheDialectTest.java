@@ -33,11 +33,11 @@ public class CacheDialectTest {
 
         public String getLongCalc() {
             try {
-                Thread.sleep(2000);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
-                return "2 sec";
+                return "fail";
             }
-            return "1 sec";
+            return "0.2 sec";
         }
 
         public String getText() {
