@@ -66,7 +66,7 @@ public class CacheProcessor extends AbstractStandardExpressionAttributeTagProces
             // The object is the cached string representation
             structureHandler.replaceWith(contents.get(0), false);
         } else {
-            log.debug("Cache {} not found. Adding add processor element.", cacheName);
+            log.debug("Cache not found {}. Adding add processor element.", cacheName);
             // structureHandler.insertImmediatelyAfter(null, true);
             tag.getAttributes().setAttribute("cache:add", cacheName);
         }
