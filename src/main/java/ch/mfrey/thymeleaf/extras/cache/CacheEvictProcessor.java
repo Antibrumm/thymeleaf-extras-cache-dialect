@@ -12,7 +12,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 public class CacheEvictProcessor extends AbstractStandardExpressionAttributeTagProcessor {
 
-    public static final Logger log = LoggerFactory.getLogger(CacheEvictProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(CacheEvictProcessor.class);
     public static final int PRECEDENCE = 9;
 
     protected CacheEvictProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {

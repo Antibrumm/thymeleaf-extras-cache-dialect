@@ -22,7 +22,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 public class CacheAddProcessor extends AbstractAttributeModelProcessor {
 
-    public static final Logger log = LoggerFactory.getLogger(CacheAddProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(CacheAddProcessor.class);
     public static final int PRECEDENCE = 11;
 
     protected CacheAddProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {

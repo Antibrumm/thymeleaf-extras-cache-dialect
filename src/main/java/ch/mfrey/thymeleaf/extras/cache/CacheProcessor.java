@@ -18,20 +18,20 @@ import org.thymeleaf.templatemode.TemplateMode;
 /**
  * The class responsible for replacing the element by a cached version if such content is found in the cache. Resolves
  * the attribute value to get the final cache name to be able to dynamically generate the cache name if desired.
- * 
+ *
  * Supports an additional "cache:ttl=''" attribute to define the time-to-live of the cached content in seconds. TTL is
  * not extended on a cache hit.
- * 
+ *
  * If no cached content is found yet this processor adds an additional div-element into the current element. This new
  * element the CacheAddProcessor will use as a trigger to finally generate the content string to be put into the cache.
- * 
+ *
  * @author Martin Frey
- * 
+ *
  */
 public class CacheProcessor extends AbstractStandardExpressionAttributeTagProcessor {
 
     private static final String CACHE_TTL = "cache:ttl";
-    public static final Logger log = LoggerFactory.getLogger(CacheProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(CacheProcessor.class);
     public static final int PRECEDENCE = 10;
 
     protected CacheProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {

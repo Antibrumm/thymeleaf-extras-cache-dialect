@@ -55,15 +55,6 @@ public class CacheManager {
         return this.cache;
     }
 
-    private void initializeCache() {
-        StandardCache<String, List<String>> sc = new StandardCache<String, List<String>>(CACHE_NAME, false, 10, 100, null, log);
-        this.cache = sc;
-    }
-
-    public void put(final String cacheName, final TemplateMode templateMode, final Locale locale, final List<String> content) {
-        getCache().put(getCacheName(cacheName, templateMode, locale), content);
-    }
-
     public String getCacheNameFromExpressionResult(final Object expressionResult) {
         if (expressionResult == null) {
             return "";
@@ -71,6 +62,15 @@ public class CacheManager {
 
         String cacheName = String.valueOf(expressionResult);
         return cacheName;
+    }
+
+    private void initializeCache() {
+        StandardCache<String, List<String>> sc = new StandardCache<String, List<String>>(CACHE_NAME, false, 10, 100, null, log);
+        this.cache = sc;
+    }
+
+    public void put(final String cacheName, final TemplateMode templateMode, final Locale locale, final List<String> content) {
+        getCache().put(getCacheName(cacheName, templateMode, locale), content);
     }
 
 }

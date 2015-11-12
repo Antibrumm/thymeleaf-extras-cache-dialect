@@ -21,26 +21,14 @@ import ch.mfrey.thymeleaf.extras.cache.CacheDialect;
 public class CacheDialectTest {
 
     public static class A {
-        private String text;
         private List<A> as;
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
-        }
+        private String text;
 
         public List<A> getAs() {
             if (as == null) {
                 as = new ArrayList<A>();
             }
             return as;
-        }
-
-        public void setAs(List<A> as) {
-            this.as = as;
         }
 
         public String getLongCalc() {
@@ -51,19 +39,23 @@ public class CacheDialectTest {
             }
             return "1 sec";
         }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setAs(List<A> as) {
+            this.as = as;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
     }
+
+    private static final Logger log = LoggerFactory.getLogger(CacheDialectTest.class);
 
     private TemplateEngine templateEngine;
-
-    @Before
-    public void setUpTemplateEngine() {
-        ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
-        classLoaderTemplateResolver.setCacheable(false);
-        classLoaderTemplateResolver.setTemplateMode(TemplateMode.HTML);
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(classLoaderTemplateResolver);
-        templateEngine.addDialect(new CacheDialect());
-    }
 
     private A buildRecursive(int lvl) {
         A a = new A();
@@ -76,7 +68,15 @@ public class CacheDialectTest {
         return a;
     }
 
-    private static final Logger log = LoggerFactory.getLogger(CacheDialectTest.class);
+    @Before
+    public void setUpTemplateEngine() {
+        ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
+        classLoaderTemplateResolver.setCacheable(false);
+        classLoaderTemplateResolver.setTemplateMode(TemplateMode.HTML);
+        templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(classLoaderTemplateResolver);
+        templateEngine.addDialect(new CacheDialect());
+    }
 
     @Test
     public void testCache() throws InterruptedException {
