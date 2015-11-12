@@ -7,14 +7,14 @@ A dialect for Thymeleaf that allows you to do partial page caching.
 Some parts of our webpage will not change often during the lifetime of the application or is dependent only on a usersession.
 This dialect will cache the resulting output of the element it is declared on and will replace the element on a cache hit.
 
-[![Build Status](https://travis-ci.org/Antibrumm/thymeleaf-extras-with-dialect.png)](https://travis-ci.org/Antibrumm/thymeleaf-extras-with-dialect)
+[![Build Status](https://travis-ci.org/Antibrumm/thymeleaf-extras-cache-dialect.png)](https://travis-ci.org/Antibrumm/thymeleaf-extras-cache-dialect)
 
 
 Requirements
 ------------
 
  - Java 5
- - Thymeleaf 2.1.0+ (2.1.0.RELEASE and its dependencies included)
+ - Thymeleaf 3.0.0+ (3.0.0.BETA01 and its dependencies included)
 
 
 Installation
@@ -31,7 +31,7 @@ Add a dependency to your project with the following co-ordinates:
 <dependency>
 	<groupId>ch.mfrey.thymeleaf.extras.cache</groupId>
 	<artifactId>thymeleaf-cache-dialect</artifactId>
-	<version>1.0.1</version>
+	<version>2.0.0</version>
 </dependency>
 ```
 
