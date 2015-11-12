@@ -8,32 +8,34 @@ import org.thymeleaf.processor.ProcessorResult;
 import org.thymeleaf.processor.attr.AbstractAttrProcessor;
 
 public class CacheEvictProcessor extends AbstractAttrProcessor {
-	public static final Logger log = LoggerFactory.getLogger(CacheEvictProcessor.class);
-	public static final int PRECEDENCE = 10;
+    public static final Logger log = LoggerFactory.getLogger(CacheEvictProcessor.class);
+    public static final int PRECEDENCE = 10;
 
-	public CacheEvictProcessor() {
-		super("evict");
-	}
+    public CacheEvictProcessor() {
+        super("evict");
+    }
 
-	@Override
-	protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
-		final String attributeValue = element.getAttributeValue(attributeName);
+    @Override
+    protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
+        final String attributeValue = element.getAttributeValue(attributeName);
 
-		element.removeAttribute(attributeName);
+        element.removeAttribute(attributeName);
 
-		final String cacheName = ExpressionSupport.getEvaluatedAttributeValueAsString(arguments, attributeValue);
-		if (cacheName == "") {
-			return ProcessorResult.OK;
-		}
+        final String cacheName = ExpressionSupport.getEvaluatedAttributeValueAsString(arguments, attributeValue);
+        if (cacheName == "") {
+            log.debug("Cache eviction name resulted in empty string - ignoring {}", attributeValue);
+            return ProcessorResult.OK;
+        }
 
-		CacheManager.INSTANCE.evict(arguments, cacheName);
+        log.debug("Cache eviction for {}", cacheName);
+        CacheManager.INSTANCE.evict(arguments, cacheName);
 
-		return ProcessorResult.OK;
-	}
+        return ProcessorResult.OK;
+    }
 
-	@Override
-	public int getPrecedence() {
-		return CacheProcessor.PRECEDENCE - 1; // Run just before the CacheProcessor
-	}
+    @Override
+    public int getPrecedence() {
+        return CacheProcessor.PRECEDENCE - 1; // Run just before the CacheProcessor
+    }
 
 }

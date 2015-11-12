@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+	<!-- Simplest use by name. Cached indefinitely -->
+	<ul class="menu">
+		<li>Text 3</li>
+		<li>
+			<span>Text 2</span>
+			<ul>
+				<li>
+					<span>Text 1</span>
+				</li>
+				<li>
+					<span>Text 1</span>
+				</li>
+				<li>
+					<span>Text 1</span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span>Text 2</span>
+			<ul>
+				<li>
+					<span>Text 1</span>
+				</li>
+				<li>
+					<span>Text 1</span>
+				</li>
+				<li>
+					<span>Text 1</span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span>Text 2</span>
+			<ul>
+				<li>
+					<span>Text 1</span>
+				</li>
+				<li>
+					<span>Text 1</span>
+				</li>
+				<li>
+					<span>Text 1</span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	
+	<!-- Cached for 1 sec -->
+	<div class="first">
+		<span>1 sec</span>
+	</div>
+	
+	<!-- Evict a cache by name if not resolved to '' -->
+	<div class="first">
+		<span>1 sec</span>
+	</div>
+</body>
+</html>

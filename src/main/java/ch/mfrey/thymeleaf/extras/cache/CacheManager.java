@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.cache.ICache;
 import org.thymeleaf.cache.StandardCache;
-import org.thymeleaf.dom.Node;
 
 public class CacheManager {
 	private static final String CACHE_NAME = "CacheDialect";
@@ -23,8 +22,8 @@ public class CacheManager {
 		return name + "_" + templateMode + "_" + locale;
 	}
 
-	private volatile ICache<String, List<Node>> cache;
-	private volatile Map<String, List<Node>> cacheContainerReference;
+	private volatile ICache<String, List<String>> cache;
+	private volatile Map<String, List<String>> cacheContainerReference;
 	private volatile boolean cacheInitialized = false;
 
 	public void evict(final Arguments arguments, final String cacheName) {
@@ -36,7 +35,7 @@ public class CacheManager {
 	}
 
 	public void evictByStartsWith(final String cacheName) {
-		Map<String, List<Node>> cacheContainerReference = getCacheContainerReference();
+		Map<String, List<String>> cacheContainerReference = getCacheContainerReference();
 		if (cacheContainerReference == null) {
 			return;
 		}
@@ -47,12 +46,12 @@ public class CacheManager {
 		}
 	}
 
-	public List<Node> get(final Arguments arguments, final String cacheName, final int cacheTTLs) {
+	public List<String> get(final Arguments arguments, final String cacheName, final int cacheTTLs) {
 		return get(cacheName, arguments.getTemplateResolution().getTemplateMode(), arguments.getContext().getLocale(),
 				cacheTTLs);
 	}
 
-	public List<Node> get(final String cacheName, final String templateMode, final Locale locale, final int cacheTTLs) {
+	public List<String> get(final String cacheName, final String templateMode, final Locale locale, final int cacheTTLs) {
 		if (cacheTTLs == 0) {
 			return getCache().get(getCacheName(cacheName, templateMode, locale));
 		} else {
@@ -60,7 +59,7 @@ public class CacheManager {
 		}
 	}
 
-	private final ICache<String, List<Node>> getCache() {
+	private final ICache<String, List<String>> getCache() {
 		if (!this.cacheInitialized) {
 			synchronized (this) {
 				if (!this.cacheInitialized) {
@@ -72,7 +71,7 @@ public class CacheManager {
 		return this.cache;
 	}
 
-	private final Map<String, List<Node>> getCacheContainerReference() {
+	private final Map<String, List<String>> getCacheContainerReference() {
 		if (!this.cacheInitialized) {
 			synchronized (this) {
 				if (!this.cacheInitialized) {
@@ -85,13 +84,13 @@ public class CacheManager {
 	}
 
 	private void initializeCache() {
-		StandardCache<String, List<Node>> sc = new StandardCache<String, List<Node>>(CACHE_NAME, false, 10, 100, null, log);
+		StandardCache<String, List<String>> sc = new StandardCache<String, List<String>>(CACHE_NAME, false, 10, 100, null, log);
 		this.cache = sc;
 		this.cacheContainerReference = initializeCacheContainerReference(sc);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, List<Node>> initializeCacheContainerReference(StandardCache<String, List<Node>> cache) {
+	private Map<String, List<String>> initializeCacheContainerReference(StandardCache<String, List<String>> cache) {
 		try {
 			Field fieldCacheDataContainer = cache.getClass().getDeclaredField("dataContainer");
 			fieldCacheDataContainer.setAccessible(true);
@@ -99,18 +98,18 @@ public class CacheManager {
 			Field fieldContainer = cacheDataContainer.getClass().getDeclaredField("container");
 			fieldContainer.setAccessible(true);
 			Object containerConcurrentMap = fieldContainer.get(cacheDataContainer);
-			return (Map<String, List<Node>>) containerConcurrentMap;
+			return (Map<String, List<String>>) containerConcurrentMap;
 		} catch (Exception e) {
 			log.warn("Could not access ConcurrentHashMap of StandardCache. evictByStartsWith will not work!", e);
 		}
 		return null;
 	}
 
-	public void put(final Arguments arguments, final String cacheName, final List<Node> content) {
+	public void put(final Arguments arguments, final String cacheName, final List<String> content) {
 		put(cacheName, arguments.getTemplateResolution().getTemplateMode(), arguments.getContext().getLocale(), content);
 	}
 
-	public void put(final String cacheName, final String templateMode, final Locale locale, final List<Node> content) {
+	public void put(final String cacheName, final String templateMode, final Locale locale, final List<String> content) {
 		getCache().put(getCacheName(cacheName, templateMode, locale), content);
 	}
 

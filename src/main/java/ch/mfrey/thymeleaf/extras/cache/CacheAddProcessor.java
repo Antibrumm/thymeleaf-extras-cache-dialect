@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.Arguments;
 import org.thymeleaf.dom.Element;
-import org.thymeleaf.dom.Macro;
 import org.thymeleaf.dom.NestableNode;
-import org.thymeleaf.dom.Node;
 import org.thymeleaf.exceptions.ConfigurationException;
 import org.thymeleaf.exceptions.TemplateOutputException;
 import org.thymeleaf.processor.ProcessorResult;
@@ -20,48 +18,47 @@ import org.thymeleaf.templatewriter.AbstractGeneralTemplateWriter;
 import org.thymeleaf.templatewriter.ITemplateWriter;
 
 public class CacheAddProcessor extends AbstractAttrProcessor {
-	public static final Logger log = LoggerFactory.getLogger(CacheAddProcessor.class);
+    public static final Logger log = LoggerFactory.getLogger(CacheAddProcessor.class);
 
-	public CacheAddProcessor() {
-		super("add");
-	}
+    public CacheAddProcessor() {
+        super("add");
+    }
 
-	@Override
-	protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
-		String cacheName = element.getAttributeValue(attributeName);
-		element.removeAttribute(attributeName);
-		
-		log.debug("Caching element {}", cacheName);
+    @Override
+    protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
+        String cacheName = element.getAttributeValue(attributeName);
+        element.removeAttribute(attributeName);
 
-		String templateMode = arguments.getTemplateResolution().getTemplateMode();
+        log.debug("Caching element {}", cacheName);
 
-		final ITemplateModeHandler templateModeHandler = arguments.getConfiguration().getTemplateModeHandler(templateMode);
-		final ITemplateWriter templateWriter = templateModeHandler.getTemplateWriter();
+        String templateMode = arguments.getTemplateResolution().getTemplateMode();
 
-		if (templateWriter == null) {
-			throw new ConfigurationException("No template writer defined for template mode \"" + templateMode + "\"");
-		} else if (!AbstractGeneralTemplateWriter.class.isAssignableFrom(templateWriter.getClass())) {
-			throw new ConfigurationException("The template writer defined for template mode \"" + templateMode
-					+ "\" is not an AbstractGeneralTemplateWriter");
-		}
+        final ITemplateModeHandler templateModeHandler = arguments.getConfiguration().getTemplateModeHandler(templateMode);
+        final ITemplateWriter templateWriter = templateModeHandler.getTemplateWriter();
 
-		StringWriter writer = new StringWriter();
-		try {
-			NestableNode parent = element.getParent();
-			parent.removeChild(element);
-			((AbstractGeneralTemplateWriter) templateWriter).writeNode(arguments, writer, parent);
+        if (templateWriter == null) {
+            throw new ConfigurationException("No template writer defined for template mode \"" + templateMode + "\"");
+        } else if (!AbstractGeneralTemplateWriter.class.isAssignableFrom(templateWriter.getClass())) {
+            throw new ConfigurationException("The template writer defined for template mode \"" + templateMode
+                    + "\" is not an AbstractGeneralTemplateWriter");
+        }
 
-			Node content = new Macro(writer.toString());
-			CacheManager.INSTANCE.put(arguments, cacheName, Collections.singletonList(content));
-		} catch (IOException e) {
-			throw new TemplateOutputException("Error during creation of output", e);
-		}
-		return ProcessorResult.OK;
-	}
+        StringWriter writer = new StringWriter();
+        try {
+            NestableNode parent = element.getParent();
+            parent.removeChild(element);
+            ((AbstractGeneralTemplateWriter) templateWriter).writeNode(arguments, writer, parent);
 
-	@Override
-	public int getPrecedence() {
-		return 10;
-	}
+            CacheManager.INSTANCE.put(arguments, cacheName, Collections.singletonList(writer.toString()));
+        } catch (IOException e) {
+            throw new TemplateOutputException("Error during creation of output", e);
+        }
+        return ProcessorResult.OK;
+    }
+
+    @Override
+    public int getPrecedence() {
+        return 10;
+    }
 
 }

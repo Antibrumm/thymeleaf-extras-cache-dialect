@@ -3,9 +3,8 @@ package ch.mfrey.thymeleaf.extras.cache;
 import java.util.List;
 
 import org.thymeleaf.cache.ICacheEntryValidityChecker;
-import org.thymeleaf.dom.Node;
 
-class TTLCacheValidityChecker implements ICacheEntryValidityChecker<String, List<Node>> {
+class TTLCacheValidityChecker implements ICacheEntryValidityChecker<String, List<String>> {
 
 	/**
 	 * 
@@ -19,7 +18,7 @@ class TTLCacheValidityChecker implements ICacheEntryValidityChecker<String, List
 		this.cacheTTLs = cacheTTLs;
 	}
 
-	public boolean checkIsValueStillValid(String key, List<Node> value, long entryCreationTimestamp) {
+	public boolean checkIsValueStillValid(String key, List<String> value, long entryCreationTimestamp) {
 		final long currentTimeInMillis = System.currentTimeMillis();
 		return (currentTimeInMillis < entryCreationTimestamp + this.cacheTTLs * 1000);
 	}

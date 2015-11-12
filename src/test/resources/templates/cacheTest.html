@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:cache="http://www.thymeleaf.org/extras/cache">
+<head></head>
+<body>
+	<!-- Simplest use by name. Cached indefinitely -->
+	<ul cache:name="menu_+${user_role}" class="menu">
+		<li th:text="${a.text}"></li>
+		<li th:each="b : ${a.as}" th:object="${b}">
+			<span th:text="*{text}"></span>
+			<ul>
+				<li th:each="c : *{as}" th:object="${c}">
+					<span th:text="*{text}"></span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	
+	<!-- Cached for 1 sec -->
+	<div cache:name="longCalcValue" cache:ttl="1" class="first">
+		<span th:text="${a.longCalc}"></span>
+	</div>
+	
+	<!-- Evict a cache by name if not resolved to '' -->
+	<div cache:evict="${mayResolveIntoACachedName}" cache:name="longCalcValue" class="second">
+		<span th:text="${a.longCalc+ ' and another one'}"></span>
+	</div>
+</body>
+</html>
