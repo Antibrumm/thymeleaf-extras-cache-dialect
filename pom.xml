@@ -9,7 +9,7 @@
 
 Some parts of our webpage will never change during the lifetime of the application or a usersession, but the part should still be dynamic in the beginning. 
 
-Working with Thymeleaf 2.1.0+ (2.1.0.RELEASE and its dependencies included)</description>
+Working with Thymeleaf 3.0.0+ (3.0.0.BETA01 and its dependencies included)</description>
 	<url>https://github.com/Antibrumm/thymeleaf-extras-cache</url>
 	<licenses>
 		<license>
@@ -55,7 +55,7 @@ Working with Thymeleaf 2.1.0+ (2.1.0.RELEASE and its dependencies included)</des
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
-			<version>2.1.0.RELEASE</version>
+			<version>3.0.0.BETA01</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

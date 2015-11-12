@@ -10,7 +10,7 @@
 	</appender>
 
 	<logger name="ch.mfrey" level="debug" />
-	
+ 	
 	<root level="info">
 		<appender-ref ref="STDOUT" />
 	</root>

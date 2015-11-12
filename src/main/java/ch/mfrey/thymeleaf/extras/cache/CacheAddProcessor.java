@@ -6,59 +6,63 @@ import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.Arguments;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.dom.NestableNode;
-import org.thymeleaf.exceptions.ConfigurationException;
-import org.thymeleaf.exceptions.TemplateOutputException;
-import org.thymeleaf.processor.ProcessorResult;
-import org.thymeleaf.processor.attr.AbstractAttrProcessor;
-import org.thymeleaf.templatemode.ITemplateModeHandler;
-import org.thymeleaf.templatewriter.AbstractGeneralTemplateWriter;
-import org.thymeleaf.templatewriter.ITemplateWriter;
+import org.thymeleaf.IEngineConfiguration;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.dialect.IProcessorDialect;
+import org.thymeleaf.engine.AttributeName;
+import org.thymeleaf.engine.TemplateModel;
+import org.thymeleaf.exceptions.TemplateProcessingException;
+import org.thymeleaf.model.IModel;
+import org.thymeleaf.processor.element.AbstractAttributeModelProcessor;
+import org.thymeleaf.processor.element.IElementModelStructureHandler;
+import org.thymeleaf.standard.expression.IStandardExpression;
+import org.thymeleaf.standard.expression.IStandardExpressionParser;
+import org.thymeleaf.standard.expression.StandardExpressions;
+import org.thymeleaf.templatemode.TemplateMode;
 
-public class CacheAddProcessor extends AbstractAttrProcessor {
+public class CacheAddProcessor extends AbstractAttributeModelProcessor {
+
     public static final Logger log = LoggerFactory.getLogger(CacheAddProcessor.class);
+    public static final int PRECEDENCE = 11;
 
-    public CacheAddProcessor() {
-        super("add");
+    protected CacheAddProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {
+        super(dialect, templateMode, dialectPrefix, null, false, "add", true, PRECEDENCE, true);
     }
 
     @Override
-    protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
-        String cacheName = element.getAttributeValue(attributeName);
-        element.removeAttribute(attributeName);
+    protected void doProcess(ITemplateContext context, IModel model, AttributeName attributeName, String attributeValue, String attributeTemplateName, int attributeLine, int attributeCol,
+            IElementModelStructureHandler structureHandler) {
+        final IEngineConfiguration configuration = context.getConfiguration();
+        final IStandardExpressionParser expressionParser = StandardExpressions.getExpressionParser(configuration);
+
+        final Object expressionResult;
+        if (attributeValue != null) {
+            final IStandardExpression expression = expressionParser.parseExpression(context, attributeValue);
+            expressionResult = expression.execute(context);
+        } else {
+            expressionResult = null;
+        }
+
+        String cacheName = CacheManager.INSTANCE.getCacheNameFromExpressionResult(expressionResult);
+        if (cacheName == "") {
+            log.debug("Cache name not resolvable: {}", attributeValue);
+            return;
+        }
 
         log.debug("Caching element {}", cacheName);
 
-        String templateMode = arguments.getTemplateResolution().getTemplateMode();
-
-        final ITemplateModeHandler templateModeHandler = arguments.getConfiguration().getTemplateModeHandler(templateMode);
-        final ITemplateWriter templateWriter = templateModeHandler.getTemplateWriter();
-
-        if (templateWriter == null) {
-            throw new ConfigurationException("No template writer defined for template mode \"" + templateMode + "\"");
-        } else if (!AbstractGeneralTemplateWriter.class.isAssignableFrom(templateWriter.getClass())) {
-            throw new ConfigurationException("The template writer defined for template mode \"" + templateMode
-                    + "\" is not an AbstractGeneralTemplateWriter");
-        }
-
-        StringWriter writer = new StringWriter();
         try {
-            NestableNode parent = element.getParent();
-            parent.removeChild(element);
-            ((AbstractGeneralTemplateWriter) templateWriter).writeNode(arguments, writer, parent);
+            final StringWriter modelWriter = new StringWriter();
+            model.write(modelWriter);
+            final TemplateModel cacheModel = configuration.getTemplateManager().parseString(context.getTemplateData(), modelWriter.toString(), attributeLine, attributeCol, getTemplateMode(), false);
 
-            CacheManager.INSTANCE.put(arguments, cacheName, Collections.singletonList(writer.toString()));
+            final StringWriter templateWriter = new StringWriter();
+            configuration.getTemplateManager().process(cacheModel, context, templateWriter);
+
+            CacheManager.INSTANCE.put(cacheName, getTemplateMode(), context.getLocale(), Collections.singletonList(templateWriter.toString()));
         } catch (IOException e) {
-            throw new TemplateOutputException("Error during creation of output", e);
+            throw new TemplateProcessingException("Error during creation of output", e);
         }
-        return ProcessorResult.OK;
-    }
-
-    @Override
-    public int getPrecedence() {
-        return 10;
     }
 
 }

@@ -4,11 +4,16 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.Arguments;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.dom.Macro;
-import org.thymeleaf.processor.ProcessorResult;
-import org.thymeleaf.processor.attr.AbstractAttrProcessor;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.dialect.IProcessorDialect;
+import org.thymeleaf.engine.AttributeName;
+import org.thymeleaf.model.IProcessableElementTag;
+import org.thymeleaf.processor.element.IElementTagStructureHandler;
+import org.thymeleaf.standard.expression.IStandardExpression;
+import org.thymeleaf.standard.expression.IStandardExpressionParser;
+import org.thymeleaf.standard.expression.StandardExpressions;
+import org.thymeleaf.standard.processor.AbstractStandardExpressionAttributeTagProcessor;
+import org.thymeleaf.templatemode.TemplateMode;
 
 /**
  * The class responsible for replacing the element by a cached version if such content is found in the cache. Resolves
@@ -23,64 +28,49 @@ import org.thymeleaf.processor.attr.AbstractAttrProcessor;
  * @author Martin Frey
  * 
  */
-public class CacheProcessor extends AbstractAttrProcessor {
+public class CacheProcessor extends AbstractStandardExpressionAttributeTagProcessor {
 
     private static final String CACHE_TTL = "cache:ttl";
-
     public static final Logger log = LoggerFactory.getLogger(CacheProcessor.class);
     public static final int PRECEDENCE = 10;
 
-    public CacheProcessor() {
-        super("name");
+    protected CacheProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {
+        super(dialect, templateMode, dialectPrefix, "name", PRECEDENCE, true);
     }
 
     @Override
-    protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
-        final String attributeValue = element.getAttributeValue(attributeName);
-        element.removeAttribute(attributeName);
-
-        final String cacheName = ExpressionSupport.getEvaluatedAttributeValueAsString(arguments, attributeValue);
+    protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, String attributeTemplateName, int attributeLine,
+            int attributeCol, Object expressionResult, IElementTagStructureHandler structureHandler) {
+        String cacheName = CacheManager.INSTANCE.getCacheNameFromExpressionResult(expressionResult);
         if (cacheName == "") {
             log.debug("Cache name not resolvable: {}", attributeValue);
-            return ProcessorResult.OK;
+            return;
         }
 
-        int cacheTTLs = 0;
-        try {
-            String ttlValue = element.getAttributeValue(CACHE_TTL);
-            if (ttlValue != null) {
-                ttlValue = ExpressionSupport.getEvaluatedAttributeValueAsString(arguments, ttlValue);
-                if (ttlValue == "") {
-                    ttlValue = null;
-                } else {
-                    cacheTTLs = Integer.parseInt(ttlValue);
-                }
-                element.removeAttribute(CACHE_TTL);
-            }
-        } catch (NumberFormatException e) {
-            log.warn("cache:ttl defined but not parseable");
-        }
+        final IStandardExpressionParser expressionParser = StandardExpressions.getExpressionParser(context.getConfiguration());
 
-        List<String> contents = CacheManager.INSTANCE.get(arguments, cacheName, cacheTTLs);
+        final int cacheTTL;
+        String ttlValue = tag.getAttributes().getValue(CACHE_TTL);
+        if (ttlValue != null) {
+            final IStandardExpression expression = expressionParser.parseExpression(context, ttlValue);
+            cacheTTL = ((Number) expression.execute(context)).intValue();
+        } else {
+            cacheTTL = 0;
+        }
+        tag.getAttributes().removeAttribute(CACHE_TTL);
+
+        List<String> contents = CacheManager.INSTANCE.get(cacheName, getTemplateMode(), context.getLocale(), cacheTTL);
 
         if (contents != null && contents.size() == 1) {
             log.debug("Cache found {}. Replacing element.", cacheName);
             // The object is the cached string representation
-            element.clearChildren();
-            element.getParent().insertAfter(element, new Macro(contents.get(0)));
-            element.getParent().removeChild(element);
+            structureHandler.replaceWith(contents.get(0), false);
         } else {
             log.debug("Cache {} not found. Adding add processor element.", cacheName);
-            Element cacheDiv = new Element("div");
-            cacheDiv.setAttribute("cache:add", cacheName);
-            element.addChild(cacheDiv);
+            // structureHandler.insertImmediatelyAfter(null, true);
+            tag.getAttributes().setAttribute("cache:add", cacheName);
         }
-        return ProcessorResult.OK;
-    }
 
-    @Override
-    public int getPrecedence() {
-        return PRECEDENCE;
     }
 
 }

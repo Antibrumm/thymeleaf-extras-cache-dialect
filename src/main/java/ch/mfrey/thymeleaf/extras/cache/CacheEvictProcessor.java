@@ -2,40 +2,34 @@ package ch.mfrey.thymeleaf.extras.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.thymeleaf.Arguments;
-import org.thymeleaf.dom.Element;
-import org.thymeleaf.processor.ProcessorResult;
-import org.thymeleaf.processor.attr.AbstractAttrProcessor;
+import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.dialect.IProcessorDialect;
+import org.thymeleaf.engine.AttributeName;
+import org.thymeleaf.model.IProcessableElementTag;
+import org.thymeleaf.processor.element.IElementTagStructureHandler;
+import org.thymeleaf.standard.processor.AbstractStandardExpressionAttributeTagProcessor;
+import org.thymeleaf.templatemode.TemplateMode;
 
-public class CacheEvictProcessor extends AbstractAttrProcessor {
+public class CacheEvictProcessor extends AbstractStandardExpressionAttributeTagProcessor {
+
     public static final Logger log = LoggerFactory.getLogger(CacheEvictProcessor.class);
-    public static final int PRECEDENCE = 10;
+    public static final int PRECEDENCE = 9;
 
-    public CacheEvictProcessor() {
-        super("evict");
+    protected CacheEvictProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {
+        super(dialect, templateMode, dialectPrefix, "evict", PRECEDENCE, true);
     }
 
     @Override
-    protected ProcessorResult processAttribute(Arguments arguments, Element element, String attributeName) {
-        final String attributeValue = element.getAttributeValue(attributeName);
-
-        element.removeAttribute(attributeName);
-
-        final String cacheName = ExpressionSupport.getEvaluatedAttributeValueAsString(arguments, attributeValue);
+    protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, String attributeTemplateName, int attributeLine,
+            int attributeCol, Object expressionResult, IElementTagStructureHandler structureHandler) {
+        String cacheName = CacheManager.INSTANCE.getCacheNameFromExpressionResult(expressionResult);
         if (cacheName == "") {
             log.debug("Cache eviction name resulted in empty string - ignoring {}", attributeValue);
-            return ProcessorResult.OK;
+            return;
         }
 
         log.debug("Cache eviction for {}", cacheName);
-        CacheManager.INSTANCE.evict(arguments, cacheName);
-
-        return ProcessorResult.OK;
-    }
-
-    @Override
-    public int getPrecedence() {
-        return CacheProcessor.PRECEDENCE - 1; // Run just before the CacheProcessor
+        CacheManager.INSTANCE.evict(cacheName, getTemplateMode(), context.getLocale());
     }
 
 }

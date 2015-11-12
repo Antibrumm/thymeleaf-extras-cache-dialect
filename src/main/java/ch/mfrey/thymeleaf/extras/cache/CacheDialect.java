@@ -3,33 +3,29 @@ package ch.mfrey.thymeleaf.extras.cache;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.thymeleaf.dialect.AbstractDialect;
+import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
+import org.thymeleaf.templatemode.TemplateMode;
 
-public class CacheDialect extends AbstractDialect {
-	public static final String DIALECT_NAMESPACE = "http://www.thymeleaf.org/extras/cache";
+public class CacheDialect extends AbstractProcessorDialect {
 
-	public static final String DIALECT_PREFIX = "cache";
+    public static final String DIALECT_NAMESPACE = "http://www.thymeleaf.org/extras/cache";
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<IProcessor> getProcessors() {
-		HashSet<IProcessor> processors = new HashSet<IProcessor>();
-		processors.add(new CacheProcessor());
-		processors.add(new CacheAddProcessor());
+    public static final String DIALECT_PREFIX = "cache";
 
-		processors.add(new CacheEvictProcessor());
-		return processors;
-	}
+    public CacheDialect() {
+        super(DIALECT_NAMESPACE, DIALECT_PREFIX, 0);
+    }
 
-	public String getPrefix() {
-		return DIALECT_PREFIX;
-	}
-
-	public boolean isLenient() {
-		return false;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public Set<IProcessor> getProcessors(String dialectPrefix) {
+        HashSet<IProcessor> processors = new HashSet<IProcessor>();
+        processors.add(new CacheProcessor(this, TemplateMode.HTML, dialectPrefix));
+        processors.add(new CacheAddProcessor(this, TemplateMode.HTML, dialectPrefix));
+        processors.add(new CacheEvictProcessor(this, TemplateMode.HTML, dialectPrefix));
+        return processors;
+    }
 
 }

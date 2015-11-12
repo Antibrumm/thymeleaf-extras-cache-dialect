@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import ch.mfrey.thymeleaf.extras.cache.CacheDialect;
@@ -58,7 +59,7 @@ public class CacheDialectTest {
     public void setUpTemplateEngine() {
         ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
         classLoaderTemplateResolver.setCacheable(false);
-        classLoaderTemplateResolver.setTemplateMode("HTML5");
+        classLoaderTemplateResolver.setTemplateMode(TemplateMode.HTML);
         templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(classLoaderTemplateResolver);
         templateEngine.addDialect(new CacheDialect());
@@ -93,7 +94,8 @@ public class CacheDialectTest {
         String resultCached = templateEngine.process("templates/cacheTest.html", new Context(Locale.getDefault(), variables));
 
         log.debug("TTL");
-        Thread.sleep(1500);
+        log.debug("Sleeping 5.5sec");
+        Thread.sleep(5500);
         String resultTTL = templateEngine.process("templates/cacheTest.html", new Context(Locale.getDefault(), variables));
 
         log.debug("EVICT");
