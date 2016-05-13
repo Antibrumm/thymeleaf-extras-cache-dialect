@@ -3,7 +3,6 @@ package ch.mfrey.thymeleaf.extras.cache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.context.ITemplateContext;
-import org.thymeleaf.dialect.IProcessorDialect;
 import org.thymeleaf.engine.AttributeName;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.IElementTagStructureHandler;
@@ -15,13 +14,14 @@ public class CacheEvictProcessor extends AbstractStandardExpressionAttributeTagP
     private static final Logger log = LoggerFactory.getLogger(CacheEvictProcessor.class);
     public static final int PRECEDENCE = 9;
 
-    protected CacheEvictProcessor(IProcessorDialect dialect, TemplateMode templateMode, String dialectPrefix) {
-        super(dialect, templateMode, dialectPrefix, "evict", PRECEDENCE, true);
+    protected CacheEvictProcessor(TemplateMode templateMode, String dialectPrefix) {
+        super(templateMode, dialectPrefix, "evict", PRECEDENCE, true);
     }
 
     @Override
-    protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName, String attributeValue, String attributeTemplateName, int attributeLine,
-            int attributeCol, Object expressionResult, IElementTagStructureHandler structureHandler) {
+    protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName,
+            String attributeValue,
+            Object expressionResult, IElementTagStructureHandler structureHandler) {
         String cacheName = CacheManager.INSTANCE.getCacheNameFromExpressionResult(expressionResult);
         if (cacheName == "") {
             log.debug("Cache eviction name resulted in empty string - ignoring {}", attributeValue);

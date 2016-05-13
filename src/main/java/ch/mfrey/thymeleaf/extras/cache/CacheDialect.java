@@ -23,10 +23,10 @@ public class CacheDialect extends AbstractProcessorDialect {
      */
     public Set<IProcessor> getProcessors(String dialectPrefix) {
         HashSet<IProcessor> processors = new HashSet<IProcessor>();
-        processors.add(new StandardXmlNsTagProcessor(this, TemplateMode.HTML, dialectPrefix));
-        processors.add(new CacheProcessor(this, TemplateMode.HTML, dialectPrefix));
-        processors.add(new CacheAddProcessor(this, TemplateMode.HTML, dialectPrefix));
-        processors.add(new CacheEvictProcessor(this, TemplateMode.HTML, dialectPrefix));
+        processors.add(new StandardXmlNsTagProcessor(TemplateMode.HTML, dialectPrefix));
+        processors.add(new CacheProcessor(TemplateMode.HTML, dialectPrefix));
+        processors.add(new CacheAddProcessor(TemplateMode.HTML, dialectPrefix));
+        processors.add(new CacheEvictProcessor(TemplateMode.HTML, dialectPrefix));
         return processors;
     }
 

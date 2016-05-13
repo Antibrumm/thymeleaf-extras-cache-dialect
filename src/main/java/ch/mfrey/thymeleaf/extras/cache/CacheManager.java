@@ -35,11 +35,13 @@ public class CacheManager {
         }
     }
 
-    public List<String> get(final String cacheName, final TemplateMode templateMode, final Locale locale, final int cacheTTLs) {
+    public List<String> get(final String cacheName, final TemplateMode templateMode, final Locale locale,
+            final int cacheTTLs) {
         if (cacheTTLs == 0) {
             return getCache().get(getCacheName(cacheName, templateMode, locale));
         } else {
-            return getCache().get(getCacheName(cacheName, templateMode, locale), new TTLCacheValidityChecker(cacheTTLs));
+            return getCache().get(getCacheName(cacheName, templateMode, locale),
+                    new TTLCacheValidityChecker(cacheTTLs));
         }
     }
 
@@ -65,11 +67,13 @@ public class CacheManager {
     }
 
     private void initializeCache() {
-        StandardCache<String, List<String>> sc = new StandardCache<String, List<String>>(CACHE_NAME, false, 10, 100, null, log);
+        StandardCache<String, List<String>> sc = new StandardCache<String, List<String>>(CACHE_NAME, false, 10, 100,
+                null, log);
         this.cache = sc;
     }
 
-    public void put(final String cacheName, final TemplateMode templateMode, final Locale locale, final List<String> content) {
+    public void put(final String cacheName, final TemplateMode templateMode, final Locale locale,
+            final List<String> content) {
         getCache().put(getCacheName(cacheName, templateMode, locale), content);
     }
 
