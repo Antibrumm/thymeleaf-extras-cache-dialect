@@ -54,7 +54,7 @@ Working with Thymeleaf 3.0.0+ (3.0.0.RELEASE and its dependencies included)</des
 		<dependency>
 			<groupId>org.thymeleaf</groupId>
 			<artifactId>thymeleaf</artifactId>
-			<version>3.0.0.RELEASE</version>
+			<version>3.0.3.RELEASE</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
