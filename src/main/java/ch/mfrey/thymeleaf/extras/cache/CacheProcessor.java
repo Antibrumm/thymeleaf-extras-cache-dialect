@@ -49,12 +49,11 @@ public class CacheProcessor extends AbstractStandardExpressionAttributeTagProces
             return;
         }
 
-        final IStandardExpressionParser expressionParser = StandardExpressions
-                .getExpressionParser(context.getConfiguration());
-
         final int cacheTTL;
         String ttlValue = tag.getAttributeValue(CACHE_TTL);
         if (ttlValue != null) {
+            final IStandardExpressionParser expressionParser = StandardExpressions
+                    .getExpressionParser(context.getConfiguration());
             final IStandardExpression expression = expressionParser.parseExpression(context, ttlValue);
             cacheTTL = ((Number) expression.execute(context)).intValue();
         } else {
@@ -71,7 +70,7 @@ public class CacheProcessor extends AbstractStandardExpressionAttributeTagProces
         } else {
             log.debug("Cache not found {}. Adding add processor element.", cacheName);
             // structureHandler.insertImmediatelyAfter(null, true);
-            structureHandler.setAttribute("cache:add", cacheName);
+            structureHandler.setAttribute("cache:add", "'" + cacheName + "'");
         }
 
     }
